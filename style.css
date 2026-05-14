@@ -82,3 +82,155 @@ body {
     .botao:last-child { border-radius: 0 20px 0 0; } 
     .contador-digito-numero { font-size: 64px; }
 }
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Inter:wght@300;600&display=swap');
+
+:root {
+    --cor-de-fundo: #020617;
+    --lilas: #818cf8;
+    --branco: #f8fafc;
+    --botao-ativo: rgba(30, 41, 59, 0.7);
+    --botao-inativo: rgba(15, 23, 42, 0.3);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --verde-neon: #4ade80;
+    --gradiente: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+body {
+    background-color: var(--cor-de-fundo);
+    background-image: radial-gradient(circle at top right, #1e1b4b, transparent),
+                      radial-gradient(circle at bottom left, #0c4a6e, transparent);
+    color: var(--branco);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.conteudo-principal {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    z-index: 1;
+}
+
+.titulo-principal {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
+}
+
+.titulo-principal span {
+    color: var(--lilas);
+    text-shadow: 0 0 20px rgba(129, 140, 248, 0.5);
+}
+
+.conteudo-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.botoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.botao {
+    font-family: 'Chakra Petch', sans-serif;
+    background: transparent;
+    color: var(--branco);
+    border: none;
+    padding: 1.5rem 1rem;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.6;
+    border-bottom: 2px solid transparent;
+}
+
+.botao.ativo {
+    opacity: 1;
+    background: var(--botao-ativo);
+    color: var(--lilas);
+    border-bottom: 2px solid var(--lilas);
+}
+
+.botao:hover:not(.ativo) {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.abas-textos {
+    padding: 3rem 2rem;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.aba-conteudo { display: none; animation: fadeIn 0.5s ease; }
+.aba-conteudo.ativo { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.aba-conteudo-titulo-principal {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.aba-conteudo-titulo-secundario {
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--lilas);
+    margin-bottom: 2rem;
+}
+
+.contador {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.contador-digito {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1.5rem 0.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contador-digito-numero {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--verde-neon);
+    display: block;
+}
+
+.contador-digito-texto {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-top: 5px;
+}
+
+@media (max-width: 600px) {
+    .contador { grid-template-columns: repeat(2, 1fr); }
+    .titulo-principal { font-size: 2rem; }
+}

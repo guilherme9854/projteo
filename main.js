@@ -65,3 +65,67 @@ function atualizaCronometro() {
 // Inicia o cronômetro e atualiza a cada 1 segundo 
 setInterval(atualizaCronometro, 1000);
 atualizaCronometro();
+const botoes = document.querySelectorAll(".botao");
+const textos = document.querySelectorAll(".aba-conteudo");
+
+// Gerenciar Abas
+botoes.forEach((botao, index) => {
+    botao.addEventListener("click", () => {
+        document.querySelector(".botao.ativo").classList.remove("ativo");
+        document.querySelector(".aba-conteudo.ativo").classList.remove("ativo");
+        
+        botao.classList.add("ativo");
+        textos[index].classList.add("ativo");
+    });
+});
+
+// Datas dos Objetivos (Ano de 2026 conforme o sistema) 
+const tempos = [
+    new Date("2026-06-05T00:00:00"),
+    new Date("2026-10-20T00:00:00"),
+    new Date("2026-11-10T00:00:00"),
+    new Date("2026-12-30T00:00:00")
+];
+
+function calculaTempo(tempoObjetivo) {
+    let tempoAtual = new Date();
+    let tempoFinal = tempoObjetivo - tempoAtual;
+
+    if (tempoFinal <= 0) return `<p class="concluido">Objetivo Alcançado!</p>`;
+
+    let segundos = Math.floor(tempoFinal / 1000);
+    let minutos = Math.floor(segundos / 60);
+    let horas = Math.floor(minutos / 60);
+    let dias = Math.floor(horas / 24);
+
+    const format = (num) => num.toString().padStart(2, '0');
+
+    return `
+        <div class="contador-digito">
+            <span class="contador-digito-numero">${dias}</span>
+            <span class="contador-digito-texto">Dias</span>
+        </div>
+        <div class="contador-digito">
+            <span class="contador-digito-numero">${format(horas % 24)}</span>
+            <span class="contador-digito-texto">Horas</span>
+        </div>
+        <div class="contador-digito">
+            <span class="contador-digito-numero">${format(minutos % 60)}</span>
+            <span class="contador-digito-texto">Min</span>
+        </div>
+        <div class="contador-digito">
+            <span class="contador-digito-numero">${format(segundos % 60)}</span>
+            <span class="contador-digito-texto">Seg</span>
+        </div>`;
+}
+
+function atualizar() {
+    tempos.forEach((tempo, i) => {
+        const elemento = document.getElementById(`contador${i}`);
+        if (elemento) elemento.innerHTML = calculaTempo(tempo);
+    });
+}
+
+// Execução
+setInterval(atualizar, 1000);
+atualizar();
