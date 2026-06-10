@@ -1,131 +1,227 @@
-const botoes = document.querySelectorAll(".botao");
-const textos = document.querySelectorAll(".aba-conteudo");
+// ==========================================================================
+// CONFIGURAÇÃO UNIFICADA E PERFORMANCE CENTRALIZADA
+// ==========================================================================
 
-// Lógica de alternância das abas
-botoes.forEach((botao, i) => {
-    botao.onclick = () => {
-        botoes.forEach((btn, j) => {
-            btn.classList.remove("ativo");
-            textos[j].classList.remove("ativo");
-        });
-        botao.classList.add("ativo");
-        textos[i].classList.add("ativo");
-    };
-});
-
-// Definição das datas dos objetivos 
-const tempos = [
-    new Date("2026-06-05T00:00:00"),
-    new Date("2026-10-20T00:00:00"),
-    new Date("2026-11-10T00:00:00"),
-    new Date("2026-12-30T00:00:00")
-];
-
-function calculaTempo(tempoObjetivo) {
-    let tempoAtual = new Date();
-    let tempoFinal = tempoObjetivo - tempoAtual;
-
-    if (tempoFinal <= 0) return "Objetivo Concluído!";
-
-    let segundos = Math.floor(tempoFinal / 1000);
-    let minutos = Math.floor(segundos / 60);
-    let horas = Math.floor(minutos / 60);
-    let dias = Math.floor(horas / 24);
-
-    segundos %= 60;
-    minutos %= 60;
-    horas %= 24;
-
-    // Retorna o HTML estruturado com formatação de dois dígitos
-    return `
-        <div class="contador-digito">
-            <p class="contador-digito-numero">${dias}</p>
-            <p class="contador-digito-texto">dias</p>
-        </div>
-        <div class="contador-digito">
-            <p class="contador-digito-numero">${horas.toString().padStart(2, '0')}</p>
-            <p class="contador-digito-texto">horas</p>
-        </div>
-        <div class="contador-digito">
-            <p class="contador-digito-numero">${minutos.toString().padStart(2, '0')}</p>
-            <p class="contador-digito-texto">min</p>
-        </div>
-        <div class="contador-digito">
-            <p class="contador-digito-numero">${segundos.toString().padStart(2, '0')}</p>
-            <p class="contador-digito-texto">seg</p>
-        </div>`;
-}
-
-function atualizaCronometro() {
-    for (let i = 0; i < tempos.length; i++) {
-        document.getElementById(`contador${i}`).innerHTML = calculaTempo(tempos[i]);
+const quizData = [
+    {
+        question: "Qual método abaixo visa combater pragas agrícolas utilizando os próprios predadores naturais do ecossistema?",
+        options: ["A) Herbicidas Seletivos", "B) Controle Biológico", "C) Lixiviação Química"],
+        correct: 1,
+        explanation: "Excelente! O Controle Biológico utiliza predadores naturais (como joaninhas para combater pulgões), eliminando pragas de maneira ecológica e sem resíduos químicos."
+    },
+    {
+        question: "O acúmulo de substâncias químicas em tecidos vivos ao longo do tempo através da cadeia alimentar é chamado de:",
+        options: ["A) Bioacumulação", "B) Fitossanidade", "C) Transgênese"],
+        correct: 0,
+        explanation: "Correto! A bioacumulação faz com que resíduos de defensivos fiquem retidos no organismo de animais e humanos de forma progressiva e cumulativa."
+    },
+    {
+        question: "Qual é o principal foco da técnica conhecida como MIP (Manejo Integrado de Pragas)?",
+        options: ["A) Erradicar 100% dos insetos com químicos rápidos", "B) Associar métodos biológicos, culturais e químicos de forma equilibrada", "C) Substituir a irrigação por defensivos líquidos"],
+        correct: 1,
+        explanation: "Perfeito! O MIP integra ferramentas preventivas, genéticas e biológicas para reduzir ao máximo a dependência exclusiva de defensivos sintéticos."
     }
-}
-
-// Inicia o cronômetro e atualiza a cada 1 segundo 
-setInterval(atualizaCronometro, 1000);
-atualizaCronometro();
-const botoes = document.querySelectorAll(".botao");
-const textos = document.querySelectorAll(".aba-conteudo");
-
-// Gerenciar Abas
-botoes.forEach((botao, index) => {
-    botao.addEventListener("click", () => {
-        document.querySelector(".botao.ativo").classList.remove("ativo");
-        document.querySelector(".aba-conteudo.ativo").classList.remove("ativo");
-        
-        botao.classList.add("ativo");
-        textos[index].classList.add("ativo");
-    });
-});
-
-// Datas dos Objetivos (Ano de 2026 conforme o sistema) 
-const tempos = [
-    new Date("2026-06-05T00:00:00"),
-    new Date("2026-10-20T00:00:00"),
-    new Date("2026-11-10T00:00:00"),
-    new Date("2026-12-30T00:00:00")
 ];
 
-function calculaTempo(tempoObjetivo) {
-    let tempoAtual = new Date();
-    let tempoFinal = tempoObjetivo - tempoAtual;
+let currentQuestionIndex = 0;
 
-    if (tempoFinal <= 0) return `<p class="concluido">Objetivo Alcançado!</p>`;
+// Inicializador centralizado - Carrega tudo em um único evento para velocidade máxima
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // 1. Inicializa Quiz
+    loadQuizQuestion();
 
-    let segundos = Math.floor(tempoFinal / 1000);
-    let minutos = Math.floor(segundos / 60);
-    let horas = Math.floor(minutos / 60);
-    let dias = Math.floor(horas / 24);
+    // 2. Controle de Cookies e Posicionamento do Widget
+    const cookieBanner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('cookie-accept-btn');
+    const declineBtn = document.getElementById('cookie-decline-btn');
+    const feedbackWidget = document.getElementById('emoji-feedback-widget');
 
-    const format = (num) => num.toString().padStart(2, '0');
+    setTimeout(() => {
+        if(cookieBanner) cookieBanner.classList.add('show');
+    }, 800);
 
-    return `
-        <div class="contador-digito">
-            <span class="contador-digito-numero">${dias}</span>
-            <span class="contador-digito-texto">Dias</span>
-        </div>
-        <div class="contador-digito">
-            <span class="contador-digito-numero">${format(horas % 24)}</span>
-            <span class="contador-digito-texto">Horas</span>
-        </div>
-        <div class="contador-digito">
-            <span class="contador-digito-numero">${format(minutos % 60)}</span>
-            <span class="contador-digito-texto">Min</span>
-        </div>
-        <div class="contador-digito">
-            <span class="contador-digito-numero">${format(segundos % 60)}</span>
-            <span class="contador-digito-texto">Seg</span>
-        </div>`;
-}
+    function hideCookieBanner() {
+        if(cookieBanner) cookieBanner.classList.remove('show');
+        if(feedbackWidget) {
+            feedbackWidget.classList.remove('cookie-above');
+            feedbackWidget.classList.add('cookie-hidden');
+        }
+    }
 
-function atualizar() {
-    tempos.forEach((tempo, i) => {
-        const elemento = document.getElementById(`contador${i}`);
-        if (elemento) elemento.innerHTML = calculaTempo(tempo);
+    if(acceptBtn) acceptBtn.addEventListener('click', hideCookieBanner);
+    if(declineBtn) declineBtn.addEventListener('click', hideCookieBanner);
+
+    // 3. Gerenciamento do Menu Hambúrguer Dinâmico
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    if(hamburger && navMenu) {
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // 4. Widget de Avaliação (Feedback)
+    const feedbackTrigger = document.getElementById('feedback-trigger-btn');
+    const feedbackCard = document.getElementById('feedback-card');
+    const feedbackClose = document.getElementById('feedback-close-btn');
+    const emojiButtons = document.querySelectorAll('.emoji-btn');
+    const feedbackThanks = document.getElementById('feedback-thanks');
+    const feedbackEmojisContainer = document.getElementById('feedback-emojis');
+
+    if(feedbackTrigger && feedbackCard) {
+        feedbackTrigger.addEventListener('click', () => feedbackCard.classList.toggle('hidden'));
+        if(feedbackClose) feedbackClose.addEventListener('click', () => feedbackCard.classList.add('hidden'));
+
+        emojiButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(feedbackEmojisContainer) feedbackEmojisContainer.style.display = 'none';
+                if(feedbackThanks) feedbackThanks.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    feedbackCard.classList.add('hidden');
+                    setTimeout(() => {
+                        if(feedbackEmojisContainer) feedbackEmojisContainer.style.display = 'flex';
+                        if(feedbackThanks) feedbackThanks.classList.add('hidden');
+                    }, 300);
+                }, 1500);
+            });
+        });
+    }
+
+    // 5. Alternador de Temas (Light / Dark)
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if(themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            document.body.classList.toggle('dark-mode');
+            themeToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
+        });
+    }
+
+    // 6. Controle Multilíngue Simplificado
+    const langToggleBtn = document.getElementById('lang-toggle');
+    let currentLang = 'pt';
+    if(langToggleBtn) {
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'pt' ? 'en' : 'pt';
+            langToggleBtn.textContent = currentLang === 'pt' ? '🌐 PT' : '🌐 EN';
+            document.querySelectorAll('[data-lang-pt]').forEach(el => {
+                el.textContent = el.getAttribute(`data-lang-${currentLang}`);
+            });
+        });
+    }
+
+    // 7. Sistema Otimizado de Scroll (Reveal Sections)
+    const revealElements = document.querySelectorAll('.reveal');
+    function checkReveal() {
+        const triggerBottom = window.innerHeight * 0.92;
+        revealElements.forEach(el => {
+            if (el.getBoundingClientRect().top < triggerBottom) el.classList.add('visible');
+        });
+    }
+    window.addEventListener('scroll', checkReveal);
+    checkReveal(); // Disparo imediato inicial
+});
+
+// Funções Auxiliares do Ciclo Global do App
+function loadQuizQuestion() {
+    const questionEl = document.getElementById('quiz-question');
+    const optionsContainer = document.getElementById('quiz-options');
+    const feedbackEl = document.getElementById('quiz-feedback');
+    const nextBtn = document.getElementById('btn-next-quiz');
+
+    if(!questionEl || !optionsContainer) return;
+
+    feedbackEl.classList.add('hidden');
+    nextBtn.classList.add('hidden');
+    optionsContainer.innerHTML = '';
+
+    const currentQuiz = quizData[currentQuestionIndex];
+    questionEl.textContent = currentQuiz.question;
+
+    currentQuiz.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.onclick = () => checkQuizAnswer(index, button);
+        optionsContainer.appendChild(button);
     });
 }
 
-// Execução
-setInterval(atualizar, 1000);
-atualizar();
+function checkQuizAnswer(selectedIndex, clickedButton) {
+    const currentQuiz = quizData[currentQuestionIndex];
+    const feedbackEl = document.getElementById('quiz-feedback');
+    const nextBtn = document.getElementById('btn-next-quiz');
+    const buttons = document.querySelectorAll('.option-btn');
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (selectedIndex === currentQuiz.correct) {
+        clickedButton.classList.add('correct');
+        feedbackEl.textContent = currentQuiz.explanation;
+        feedbackEl.className = "quiz-feedback success";
+    } else {
+        clickedButton.classList.add('wrong');
+        feedbackEl.textContent = "Incorreto. Que tal tentar mais uma vez com o próximo desafio?";
+        feedbackEl.className = "quiz-feedback error";
+        buttons[currentQuiz.correct].classList.add('correct');
+        nextBtn.classList.remove('hidden');
+    }
+    feedbackEl.classList.remove('hidden');
+}
+
+document.getElementById('btn-next-quiz').addEventListener('click', () => {
+    currentQuestionIndex = (currentQuestionIndex + 1) % quizData.length;
+    loadQuizQuestion();
+});
+
+function filterAlternativas(category) {
+    const buttons = document.querySelectorAll('.btn-filter');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if(event) event.target.classList.add('active');
+
+    const cards = document.querySelectorAll('.premium-card');
+    cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+}
+
+function switchStep(stepIndex) {
+    const cards = document.querySelectorAll('.step-card');
+    cards.forEach((card, index) => {
+        if (index === (stepIndex - 1)) card.classList.add('active');
+        else card.classList.remove('active');
+    });
+}
+
+document.querySelectorAll('.accordion-header').forEach(button => {
+    button.addEventListener('click', () => {
+        const currentItem = button.parentElement;
+        document.querySelectorAll('.accordion-item').forEach(item => {
+            if (item !== currentItem) item.classList.remove('active');
+        });
+        currentItem.classList.toggle('active');
+    });
+});
